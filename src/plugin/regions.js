@@ -194,11 +194,31 @@ class Region {
         }
 
         if (this.minLength != null) {
-            endLimited = Math.max(startLimited + this.minLength, endLimited);
+            if (direction === 'end') {
+                startLimited = Math.min(
+                    endLimited - this.minLength,
+                    startLimited
+                );
+            } else {
+                endLimited = Math.max(
+                    startLimited + this.minLength,
+                    endLimited
+                );
+            }
         }
 
         if (this.maxLength != null) {
-            endLimited = Math.min(startLimited + this.maxLength, endLimited);
+            if (direction === 'end') {
+                startLimited = Math.max(
+                    endLimited - this.maxLength,
+                    startLimited
+                );
+            } else {
+                endLimited = Math.min(
+                    startLimited + this.maxLength,
+                    endLimited
+                );
+            }
         }
 
         if (this.element != null) {
@@ -516,15 +536,21 @@ class Region {
 
     onResize(delta, direction) {
         if (direction == 'start') {
-            this.update({
-                start: Math.min(this.start + delta, this.end),
-                end: Math.max(this.start + delta, this.end)
-            }, direction);
+            this.update(
+                {
+                    start: Math.min(this.start + delta, this.end),
+                    end: Math.max(this.start + delta, this.end)
+                },
+                direction
+            );
         } else {
-            this.update({
-                start: Math.min(this.end + delta, this.start),
-                end: Math.max(this.end + delta, this.start)
-            }, direction);
+            this.update(
+                {
+                    start: Math.min(this.end + delta, this.start),
+                    end: Math.max(this.end + delta, this.start)
+                },
+                direction
+            );
         }
     }
 }
