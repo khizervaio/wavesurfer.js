@@ -45,7 +45,7 @@ class Region {
     }
 
     /* Update region params. */
-    update(params) {
+    update(params, direction) {
         if (null != params.start) {
             this.start = Number(params.start);
         }
@@ -77,7 +77,8 @@ class Region {
             this.attributes = params.attributes;
         }
 
-        this.updateRender();
+        this.wavesurfer.fireEvent('region-will-update', this);
+        this.updateRender(direction);
         this.fireEvent('update');
         this.wavesurfer.fireEvent('region-updated', this);
     }
@@ -176,7 +177,7 @@ class Region {
     }
 
     /* Update element's position, width, color. */
-    updateRender() {
+    updateRender(direction) {
         // duration varies during loading process, so don't overwrite important data
         const dur = this.wavesurfer.getDuration();
         const width = this.getWidth();
@@ -518,12 +519,12 @@ class Region {
             this.update({
                 start: Math.min(this.start + delta, this.end),
                 end: Math.max(this.start + delta, this.end)
-            });
+            }, direction);
         } else {
             this.update({
                 start: Math.min(this.end + delta, this.start),
                 end: Math.max(this.end + delta, this.start)
-            });
+            }, direction);
         }
     }
 }
