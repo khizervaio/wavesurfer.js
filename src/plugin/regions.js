@@ -77,6 +77,8 @@ class Region {
             this.attributes = params.attributes;
         }
 
+        this.dragged = Boolean(params.dragged);
+
         this.wavesurfer.fireEvent('region-will-update', this);
         this.updateRender(direction);
         this.fireEvent('update');
@@ -180,6 +182,8 @@ class Region {
     updateRender(direction) {
         // duration varies during loading process, so don't overwrite important data
         const dur = this.wavesurfer.getDuration();
+        if (!dur) return;
+
         const width = this.getWidth();
 
         var startLimited = this.start;
@@ -479,15 +483,13 @@ class Region {
                                 }
                             } else {
                                 // Mouse based threshold
-                                let x = e.clientX - wrapperRect.left;
+                                var _xl = e.clientX - wrapperRect.left; // left direction
+                                var _xr = wrapperRect.right - scrollThreshold; // right direction
 
                                 // Check direction
-                                if (x <= scrollThreshold) {
+                                if (_xl <= scrollThreshold) {
                                     scrollDirection = -1;
-                                } else if (
-                                    x >=
-                                    wrapperRect.right - scrollThreshold
-                                ) {
+                                } else if (e.clientX >= _xr) {
                                     scrollDirection = 1;
                                 } else {
                                     scrollDirection = null;
@@ -530,7 +532,8 @@ class Region {
 
         this.update({
             start: this.start + delta,
-            end: this.end + delta
+            end: this.end + delta,
+            dragged: true
         });
     }
 
