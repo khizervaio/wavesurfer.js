@@ -195,12 +195,12 @@ class Region {
 
         if (this.minLength != null) {
             if (direction === 'end') {
-                startLimited = Math.min(
+                this.start = startLimited = Math.min(
                     endLimited - this.minLength,
                     startLimited
                 );
             } else {
-                endLimited = Math.max(
+                this.end = endLimited = Math.max(
                     startLimited + this.minLength,
                     endLimited
                 );
@@ -209,12 +209,12 @@ class Region {
 
         if (this.maxLength != null) {
             if (direction === 'end') {
-                startLimited = Math.max(
+                this.start = startLimited = Math.max(
                     endLimited - this.maxLength,
                     startLimited
                 );
             } else {
-                endLimited = Math.min(
+                this.end = endLimited = Math.min(
                     startLimited + this.maxLength,
                     endLimited
                 );
